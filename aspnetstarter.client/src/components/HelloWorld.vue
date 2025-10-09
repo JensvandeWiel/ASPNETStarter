@@ -68,7 +68,7 @@ export default defineComponent({
       this.post = null;
       this.loading = true;
 
-      var response = await fetch('/api/v1/WeatherForecast');
+      const response = await fetch('/api/v1/WeatherForecast');
       if (response.ok) {
         this.post = await response.json();
         this.loading = false;

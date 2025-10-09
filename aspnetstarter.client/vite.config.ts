@@ -1,41 +1,33 @@
 import {fileURLToPath, URL} from 'node:url';
-
 import {defineConfig} from 'vite';
 import plugin from '@vitejs/plugin-vue';
-import fs from 'fs';
-import path from 'path';
-import child_process from 'child_process';
-import {env} from 'process';
+import {env} from 'node:process';
 
-const baseFolder =
-  env.APPDATA !== undefined && env.APPDATA !== ''
-    ? `${env.APPDATA}/ASP.NET/https`
-    : `${env.HOME}/.aspnet/https`;
 
-const certificateName = "aspnetstarter.client";
-const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
-const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
-
-if (!fs.existsSync(baseFolder)) {
-  fs.mkdirSync(baseFolder, {recursive: true});
-}
-
-if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-  if (0 !== child_process.spawnSync('dotnet', [
-    'dev-certs',
-    'https',
-    '--export-path',
-    certFilePath,
-    '--format',
-    'Pem',
-    '--no-password',
-  ], {stdio: 'inherit',}).status) {
-    throw new Error("Could not create certificate.");
+/**
+ * Determines the target URL for the development server proxy
+ * @returns The target URL for proxying API requests
+ */
+function getProxyTarget(): string {
+  // Check for HTTPS port first
+  if (env.ASPNETCORE_HTTPS_PORT !== undefined && env.ASPNETCORE_HTTPS_PORT.length > 0) {
+    return `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`;
   }
+
+  // Check for configured URLs
+  if (env.ASPNETCORE_URLS !== undefined && env.ASPNETCORE_URLS.length > 0) {
+    const urls = env.ASPNETCORE_URLS.split(';');
+    const firstUrl = urls[0];
+    if (firstUrl.length > 0) {
+      return firstUrl;
+    }
+  }
+
+  // Default fallback
+  return 'http://localhost:5239';
 }
 
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-  env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:5239';
+const target = getProxyTarget();
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -52,10 +44,6 @@ export default defineConfig({
         secure: false
       }
     },
-    port: parseInt(env.DEV_SERVER_PORT || '57409'),
-    https: {
-      key: fs.readFileSync(keyFilePath),
-      cert: fs.readFileSync(certFilePath),
-    }
+    port: parseInt(env.DEV_SERVER_PORT ?? '57409'),
   }
 })
