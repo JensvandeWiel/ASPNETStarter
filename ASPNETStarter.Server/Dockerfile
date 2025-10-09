@@ -10,10 +10,15 @@ EXPOSE 8080
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS with-bun
 RUN apt-get update
-RUN apt-get install -y curl unzip
+RUN apt-get install -y curl unzip xz-utils
+# Install Node.js version 24 using official binary distribution
+RUN curl -fsSL https://nodejs.org/dist/v24.10.0/node-v24.10.0-linux-x64.tar.xz | tar -xJ -C /opt/
+RUN ln -s /opt/node-v24.10.0-linux-x64/bin/node /usr/local/bin/node
+RUN ln -s /opt/node-v24.10.0-linux-x64/bin/npx /usr/local/bin/npx
+# Install Bun
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:$PATH"
-# Create symbolic link so npm commands use bun
+# Create symbolic link so npm commands use bun (but keep node available)
 RUN ln -s /root/.bun/bin/bun /usr/local/bin/npm
 
 
@@ -23,7 +28,7 @@ WORKDIR /src
 COPY ["ASPNETStarter.Server/ASPNETStarter.Server.csproj", "ASPNETStarter.Server/"]
 COPY ["aspnetstarter.client/aspnetstarter.client.esproj", "aspnetstarter.client/"]
 COPY ["aspnetstarter.client/package.json", "aspnetstarter.client/"]
-COPY ["aspnetstarter.client/package-lock.json", "aspnetstarter.client/"]
+COPY ["aspnetstarter.client/bun.lock", "aspnetstarter.client/"]
 RUN dotnet restore "./ASPNETStarter.Server/ASPNETStarter.Server.csproj"
 # Install JavaScript dependencies with Bun for the correct platform
 WORKDIR /src/aspnetstarter.client
