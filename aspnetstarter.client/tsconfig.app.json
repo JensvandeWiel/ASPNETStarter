@@ -24,7 +24,6 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    
     // Additional strict checks
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -34,7 +33,6 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
-    
     // Error handling
     "useUnknownInCatchVariables": true,
     "allowUnreachableCode": false,
