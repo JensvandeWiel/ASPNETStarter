@@ -30,7 +30,7 @@ $newProjectNameLower = $NewProjectName.ToLower()
 Write-Host "`nStep 1: Updating file contents..." -ForegroundColor Cyan
 
 # Define file extensions to process (exclude binary files, node_modules, obj, bin)
-$fileExtensions = @("*.sln", "*.csproj", "*.esproj", "*.cs", "*.json", "*.md", "*.ts", "*.js", "*.vue", "*.html", "*.xml", "*.config", "*.txt", "*.dockerfile")
+$fileExtensions = @("*.sln", "*.csproj", "*.esproj", "*.cs", "*.json", "*.md", "*.ts", "*.js", "*.vue", "*.html", "*.xml", "*.config", "*.txt", "*.yml", "*.yaml")
 
 # Get all files to process, excluding certain directories
 $filesToProcess = Get-ChildItem -Path $ProjectRoot -Recurse -Include $fileExtensions | 
@@ -40,15 +40,26 @@ $filesToProcess = Get-ChildItem -Path $ProjectRoot -Recurse -Include $fileExtens
         -not $_.PSIsContainer
     }
 
+# Also add Dockerfile files (no extension)
+$dockerfiles = Get-ChildItem -Path $ProjectRoot -Recurse -File | 
+    Where-Object { 
+        $_.Name -eq "Dockerfile" -and
+        $_.FullName -notmatch "\\(node_modules|bin|obj|\.git|\.vs|dist)\\?"
+    }
+
+$filesToProcess = @($filesToProcess) + @($dockerfiles)
+
 $updatedFiles = 0
 foreach ($file in $filesToProcess) {
     try {
         $content = Get-Content -Path $file.FullName -Raw -ErrorAction Stop
         $originalContent = $content
         
-        # Replace case-sensitive occurrences
-        $content = $content -replace "ASPNETStarter", $NewProjectName
-        $content = $content -replace "aspnetstarter", $newProjectNameLower
+        # Replace case-sensitive occurrences using -creplace (case-sensitive replace)
+        # First replace the lowercase version (for folder names, package names, etc.)
+        $content = $content -creplace "aspnetstarter", $newProjectNameLower
+        # Then replace the PascalCase version
+        $content = $content -creplace "ASPNETStarter", $NewProjectName
         
         if ($content -ne $originalContent) {
             Set-Content -Path $file.FullName -Value $content -NoNewline -ErrorAction Stop
@@ -76,8 +87,9 @@ $filesToRename = Get-ChildItem -Path $ProjectRoot -Recurse -File |
 foreach ($file in $filesToRename) {
     try {
         $newFileName = $file.Name
-        $newFileName = $newFileName -replace "ASPNETStarter", $NewProjectName
-        $newFileName = $newFileName -replace "aspnetstarter", $newProjectNameLower
+        # Use case-sensitive replace to preserve proper casing
+        $newFileName = $newFileName -creplace "aspnetstarter", $newProjectNameLower
+        $newFileName = $newFileName -creplace "ASPNETStarter", $NewProjectName
         
         $newPath = Join-Path -Path $file.Directory.FullName -ChildPath $newFileName
         
@@ -108,8 +120,9 @@ $dirsToRename = Get-ChildItem -Path $ProjectRoot -Recurse -Directory |
 foreach ($dir in $dirsToRename) {
     try {
         $newDirName = $dir.Name
-        $newDirName = $newDirName -replace "ASPNETStarter", $NewProjectName
-        $newDirName = $newDirName -replace "aspnetstarter", $newProjectNameLower
+        # Use case-sensitive replace to preserve proper casing
+        $newDirName = $newDirName -creplace "aspnetstarter", $newProjectNameLower
+        $newDirName = $newDirName -creplace "ASPNETStarter", $NewProjectName
         
         $newPath = Join-Path -Path $dir.Parent.FullName -ChildPath $newDirName
         
@@ -133,7 +146,7 @@ $cleanupDirs = @("bin", "obj", "dist", "node_modules")
 $cleanedDirs = 0
 
 foreach ($cleanupDir in $cleanupDirs) {
-    $dirsToClean = Get-ChildItem -Path $ProjectRoot -Recurse -Directory -Name $cleanupDir -ErrorAction SilentlyContinue
+    $dirsToClean = Get-ChildItem -Path $ProjectRoot -Recurse -Directory -Filter $cleanupDir -ErrorAction SilentlyContinue
     foreach ($dir in $dirsToClean) {
         try {
             Remove-Item -Path $dir.FullName -Recurse -Force -ErrorAction Stop
@@ -148,10 +161,10 @@ foreach ($cleanupDir in $cleanupDirs) {
 
 Write-Host "  Cleaned $cleanedDirs directories" -ForegroundColor Green
 
-# Step 5: Update solution file if it exists in parent directory
+# Step 5: Update solution file if it exists
 Write-Host "`nStep 5: Checking for solution file..." -ForegroundColor Cyan
 
-$solutionFile = Get-ChildItem -Path (Split-Path $ProjectRoot -Parent) -Filter "*.sln" -ErrorAction SilentlyContinue | Select-Object -First 1
+$solutionFile = Get-ChildItem -Path $ProjectRoot -Filter "*.sln" -ErrorAction SilentlyContinue | Select-Object -First 1
 if ($solutionFile -and $solutionFile.Name -like "*ASPNETStarter*") {
     try {
         $newSolutionName = $solutionFile.Name -replace "ASPNETStarter", $NewProjectName
