@@ -44,6 +44,7 @@ export default defineConfig({
         secure: false
       }
     },
-    port: parseInt(env.DEV_SERVER_PORT ?? '57409'),
+    port: parseInt(env.DEV_SERVER_PORT ?? '3000'),
+    host: '127.0.0.1'
   }
 })

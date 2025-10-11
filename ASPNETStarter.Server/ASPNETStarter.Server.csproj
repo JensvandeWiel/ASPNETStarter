@@ -5,8 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <SpaRoot>..\aspnetstarter.client</SpaRoot>
-        <SpaProxyLaunchCommand>bun.exe run dev</SpaProxyLaunchCommand>
-        <SpaProxyServerUrl>http://localhost:57409</SpaProxyServerUrl>
+        <SpaProxyLaunchCommand>bun.exe run -b dev</SpaProxyLaunchCommand>
+        <SpaProxyServerUrl>http://localhost:3000</SpaProxyServerUrl>
     </PropertyGroup>
 
     <ItemGroup>
