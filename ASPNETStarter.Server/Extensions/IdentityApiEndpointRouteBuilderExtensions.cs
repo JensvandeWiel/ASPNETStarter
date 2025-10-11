@@ -74,7 +74,18 @@ public static class IdentityApiEndpointRouteBuilderExtensions
         // We'll figure out a unique endpoint name based on the final route pattern during endpoint generation.
         string? confirmEmailEndpointName = null;
 
-        var routeGroup = endpoints.MapGroup("");
+        var routeGroup = endpoints.MapGroup("").WithOpenApi(op =>
+        {
+            
+            var tag = new OpenApiTag
+            {
+                Name = "Identity",
+                Description = "APIs for user registration, login, logout, and account management."
+            };
+            
+            op.Tags = [tag];
+            return op;
+        });
 
         if (!options.ExcludeRegisterPost)
             // NOTE: We cannot inject UserManager<TUser> directly because the TUser generic parameter is currently unsupported by RDG.
