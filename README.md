@@ -1,61 +1,73 @@
 ﻿# ASPNETStarter
 
-A modern full-stack web application starter template built with ASP.NET Core 8.0 and Vue.js 3, featuring TypeScript, Vite, Bun, Entity Framework Core, and ASP.NET Core Identity for authentication.
+A modern full-stack web application starter template built with ASP.NET Core 8.0 and Vue.js 3, featuring TypeScript, Vite, Bun, Entity Framework Core, and ASP.NET Core Identity for authentication and authorization.
 
 ## 🏗️ Architecture
 
-This solution follows a client-server architecture with:
-
-- **Backend**: ASP.NET Core 8.0 Web API with versioned endpoints
-- **Frontend**: Vue.js 3 with TypeScript and Vite
-- **Database**: SQL Server with Entity Framework Core 8.0
-- **Authentication**: ASP.NET Core Identity with role-based authorization
-- **Package Manager**: Bun (for faster dependency management)
-- **Containerization**: Docker support with optimized multi-stage builds
+- **Backend**: ASP.NET Core 8.0 Web API with versioned, filterable endpoints
+- **Frontend**: Vue.js 3 (Composition API) with TypeScript and Vite
+- **Database**: SQL Server via Entity Framework Core 8.0
+- **Authentication**: ASP.NET Core Identity with filterable endpoints and role-based authorization
+- **Package Manager**: Bun (recommended) or Node.js
+- **Containerization**: Docker with multi-stage builds
 
 ## 📁 Project Structure
 
 ```
 ASPNETStarter/
 ├── ASPNETStarter.Server/          # Backend API (.NET 8.0)
-│   ├── Application/
-│   │   ├── ApplicationDbContext.cs      # EF Core DbContext
-│   │   └── ApplicationRoles.cs          # Role definitions enum
-│   ├── Controllers/
-│   │   ├── v1/                    # Versioned API controllers
+│   ├── Application/               # EF Core context and roles
+│   │   ├── ApplicationDbContext.cs
+│   │   └── ApplicationRoles.cs
+│   ├── Controllers/               # API controllers (versioned)
+│   │   ├── v1/
 │   │   │   └── WeatherForecastController.cs
 │   │   └── RoutePrefixConvention.cs
-│   ├── Extensions/
-│   │   └── ApplicationBuilderExtensions.cs  # Seeding extensions
+│   ├── Extensions/                # Extension methods (e.g., seeding, routing)
+│   │   ├── ApplicationBuilderExtensions.cs
+│   │   ├── AuthorizeCheckOperationFilter.cs
+│   │   ├── IdentityApiEndpointRouteBuilderExtensions.cs
+│   │   └── IdentityApiEndpointRouteBuilderOptions.cs
 │   ├── Migrations/                # EF Core migrations
-│   │   └── 20251010182208_AddAuthTables.cs
-│   ├── Models/
-│   │   └── ApplicationUser.cs     # Custom Identity user
-│   ├── Seeders/                   # Database seeding
+│   │   ├── 20251010182208_AddAuthTables.cs
+│   │   ├── 20251010182208_AddAuthTables.Designer.cs
+│   │   └── ApplicationDbContextModelSnapshot.cs
+│   ├── Models/                    # Domain models
+│   │   └── ApplicationUser.cs
+│   ├── Seeders/                   # Database seeding logic
 │   │   ├── ISeeder.cs
 │   │   ├── RoleSeeder.cs
 │   │   └── SeederAttribute.cs
-│   ├── Services/
-│   │   └── SeederService.cs       # Automatic seeder discovery
+│   ├── Services/                  # Service classes
+│   │   └── SeederService.cs
 │   ├── Properties/
 │   │   └── launchSettings.json
 │   ├── Program.cs                 # Application entry point
 │   ├── Dockerfile                 # Docker configuration
 │   └── ASPNETStarter.Server.csproj
-│
+│   └── appsettings.json           # Main configuration
+│   └── appsettings.Development.json
+│   └── docker-compose.yml         # Docker Compose config
 ├── aspnetstarter.client/          # Frontend SPA (Vue.js 3 + TypeScript)
 │   ├── src/
-│   │   ├── assets/               # Static assets (CSS, images)
-│   │   ├── components/           # Vue components
-│   │   ├── App.vue               # Root component
-│   │   └── main.ts               # Application entry point
-│   ├── public/                   # Public static files
-│   ├── vite.config.ts            # Vite configuration
-│   ├── package.json              # Node dependencies
+│   │   ├── assets/                # Static assets (CSS, images)
+│   │   ├── components/            # Vue components
+│   │   ├── types/                 # TypeScript types
+│   │   ├── App.vue                # Root component
+│   │   ├── main.ts                # Application entry point
+│   │   └── shims-vue.d.ts         # TypeScript shims
+│   ├── public/                    # Public static files (favicon, etc.)
+│   ├── vite.config.ts             # Vite configuration
+│   ├── package.json               # Node/Bun dependencies
+│   ├── bun.lock                   # Bun lockfile
+│   ├── tsconfig.json              # TypeScript config
+│   ├── tsconfig.app.json
+│   ├── tsconfig.node.json
 │   └── aspnetstarter.client.esproj
-│
-├── ASPNETStarter.sln             # Solution file
-└── rename-project.ps1            # Project renaming utility
+├── ASPNETStarter.sln              # Solution file
+├── rename-project.ps1             # Project renaming utility
+├── LICENSE                        # License file
+└── README.md                      # Project documentation
 ```
 
 ## 🚀 Getting Started
@@ -63,10 +75,10 @@ ASPNETStarter/
 ### Prerequisites
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Bun](https://bun.sh/) (v1.0.0 or higher) - Fast JavaScript runtime
+- [Bun](https://bun.sh/) (v1.1.0 or higher) - Recommended for frontend
 - [Node.js](https://nodejs.org/) (v20.19.0+ or v22.12.0+) - Alternative to Bun
 - [SQL Server](https://www.microsoft.com/sql-server) (LocalDB, Express, or full version)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) (optional, for containerization)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (optional)
 
 ### Installation
 
@@ -77,15 +89,7 @@ ASPNETStarter/
    ```
 
 2. **Configure the database connection**
-   
-   Update the connection string in `ASPNETStarter.Server/appsettings.json`:
-   ```json
-   {
-     "ConnectionStrings": {
-       "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=ASPNETStarterDB;Trusted_Connection=true;TrustServerCertificate=true;"
-     }
-   }
-   ```
+   Edit `ASPNETStarter.Server/appsettings.json` with your SQL Server connection string.
 
 3. **Restore .NET dependencies**
    ```bash
@@ -96,8 +100,7 @@ ASPNETStarter/
    ```bash
    dotnet ef database update --project ASPNETStarter.Server
    ```
-   
-   Or simply run the application - it will automatically create the database and apply migrations on startup.
+   Or simply run the backend; migrations and seeding are automatic on startup.
 
 5. **Install frontend dependencies**
    ```bash
@@ -108,25 +111,17 @@ ASPNETStarter/
 
 ### Running the Application
 
-#### Development Mode (with Hot Reload)
-
-The simplest way to run both the backend and frontend:
+#### Development Mode
 
 ```bash
 dotnet run --project ASPNETStarter.Server
 ```
-
-This will:
-- Start the ASP.NET Core backend on `https://localhost:5001` (or configured port)
-- Automatically create/migrate the database
-- Seed initial data (roles)
-- Automatically start the Vite dev server on `https://localhost:57409`
-- Enable hot module replacement (HMR) for frontend changes
-- Proxy API requests from frontend to backend
+- Starts backend on `https://localhost:5001`
+- Applies migrations and seeds roles/users
+- Starts Vite dev server for frontend with HMR
+- Proxies API requests from frontend to backend
 
 #### Manual Frontend Development
-
-To run the frontend separately:
 
 ```bash
 cd aspnetstarter.client
@@ -142,129 +137,72 @@ dotnet publish -c Release -o ./publish
 
 ## 🗄️ Database Integration
 
-### Entity Framework Core
+- Uses **Entity Framework Core 8.0**
+- Automatic migrations and seeding on startup
+- Connection string in `appsettings.json`
 
-The application uses **Entity Framework Core 8.0** with **SQL Server** as the database provider.
-
-**Key Components:**
-- **ApplicationDbContext**: Main database context inheriting from `IdentityDbContext<ApplicationUser>`
-- **Automatic Migrations**: Database is created and migrations are applied automatically on application startup
-- **Connection String**: Configured in `appsettings.json` under `ConnectionStrings:DefaultConnection`
-
-### Database Management
-
-**Apply migrations manually:**
+**Manual migration commands:**
 ```bash
 dotnet ef migrations add MigrationName --project ASPNETStarter.Server
 dotnet ef database update --project ASPNETStarter.Server
-```
-
-**Drop database (development only):**
-```bash
-dotnet ef database drop --project ASPNETStarter.Server
+dotnet ef database drop --project ASPNETStarter.Server # (development only)
 ```
 
 ## 🔐 Authentication & Authorization
 
-### ASP.NET Core Identity
+### Identity & Filterable Endpoints
 
-The application includes a complete authentication system using **Microsoft.AspNetCore.Identity.EntityFrameworkCore**:
+Authentication uses ASP.NET Core Identity, but endpoints are exposed via `MapIdentityApiFilterable`. This provides the same endpoints as standard Identity, but allows filtering, customization, and extension. You can secure, extend, or filter endpoints as needed, while maintaining compatibility with ASP.NET conventions.
 
-**Features:**
-- ✅ User registration and login
-- ✅ Identity API endpoints (`/register`, `/login`, `/logout`, etc.)
-- ✅ Role-based authorization
-- ✅ JWT Bearer token support
-- ✅ Swagger integration with Bearer authentication
-- ✅ Custom `ApplicationUser` model (extends `IdentityUser`)
+**Available endpoints include:**
+- `/register`, `/login`, `/logout`, `/refresh`, `/confirmEmail`, `/resendConfirmationEmail`, `/forgotPassword`, `/resetPassword`, `/manage/2fa`, `/manage/info`
 
-### Identity API Endpoints
+### Logout, Security Stamp, and Token Lifetime
 
-The following endpoints are automatically available:
+- **Logout**: When a user logs out via the `/logout` endpoint, the backend immediately updates the user's security stamp. This action invalidates all existing bearer tokens for that user, ensuring that any previously issued tokens cannot be used for further access.
+- **Security Stamp**: The security stamp is a unique value associated with each user. It is checked during token refresh and protected endpoint access. If the security stamp has changed (due to logout, password change, etc.), any old tokens are rejected with a 401 Unauthorized response.
+- **Short-Lived Tokens**: Tokens are intentionally configured to be short-lived. This means that even if a token is not immediately invalidated by logout, it will expire quickly, minimizing the risk window for unauthorized access.
+- **Practical Effect**: Logging out is effective and secure. After logout, all tokens are invalidated, and any remaining tokens expire soon. This prevents continued access after logout, even if a token is leaked or reused.
+- **Best Practices**: This approach follows modern security best practices, leveraging ASP.NET Core Identity’s built-in mechanisms for security stamp validation and token management.
 
-- `POST /register` - Register a new user
-- `POST /login` - Login with email and password
-- `POST /refresh` - Refresh access token
-- `POST /logout` - Logout current user
-- `GET /confirmEmail` - Confirm email address
-- `POST /resendConfirmationEmail` - Resend confirmation email
-- `POST /forgotPassword` - Request password reset
-- `POST /resetPassword` - Reset password
-- `POST /manage/2fa` - Two-factor authentication management
-- `GET /manage/info` - Get user information
-- `POST /manage/info` - Update user information
-
-### Predefined Roles
-
-The application includes three predefined roles defined in the `ApplicationRoles` enum:
-
-1. **Admin** - Full system access and administrative privileges
-2. **User** - Standard user access (default role for new users)
-3. **Moderator** - Elevated permissions for content moderation
-
-These roles are automatically seeded into the database on application startup.
-
-### Using Roles in Controllers
-
+**Usage example:**
 ```csharp
 [Authorize(Roles = "Admin")]
-public class AdminController : ControllerBase
-{
-    // Only accessible to Admin users
-}
-
-[Authorize(Roles = "Admin,Moderator")]
-public IActionResult ModerateContent()
-{
-    // Accessible to both Admin and Moderator
-}
+public class AdminController : ControllerBase { }
 ```
+
+## 📑 API Definitions & Swagger
+
+- Uses Swashbuckle for OpenAPI/Swagger documentation
+- Custom operation filter marks `[Authorize]` endpoints in Swagger UI
+- Interactive API docs at `https://localhost:5001/swagger`
+- Bearer authentication supported in Swagger UI
+
+**How to test protected endpoints:**
+1. Register/Login via Identity endpoints
+2. Copy JWT access token
+3. Click "Authorize" in Swagger UI, paste token
+4. Test endpoints
 
 ## 🌱 Database Seeding
 
-### Seeder System
+- Automatic discovery and execution of seeders via reflection
+- Seeders implement `ISeeder` and are marked with `[Seeder(order: X)]`
+- Built-in seeders: `RoleSeeder` (roles), custom seeders supported
+- Runs on startup, idempotent
 
-The application features a sophisticated automatic database seeding system that:
-
-- ✅ Discovers seeders automatically via reflection
-- ✅ Executes seeders in a specified order
-- ✅ Runs on application startup
-- ✅ Logs seeding operations
-- ✅ Extensible for custom seeders
-
-### Architecture
-
-**Key Components:**
-- **ISeeder Interface**: Contract for all seeders
-- **SeederAttribute**: Marks classes as seeders with execution order
-- **SeederService**: Discovers and executes all seeders
-- **ApplicationBuilderExtensions**: Extension method for easy integration
-
-### Creating Custom Seeders
-
-1. Create a new class implementing `ISeeder`
-2. Add the `[Seeder(order: X)]` attribute
-3. Implement the `SeedAsync` method
-
-**Example:**
-
+**Example custom seeder:**
 ```csharp
 [Seeder(order: 2)]
-public class UserSeeder : ISeeder
-{
-    public async Task SeedAsync(DbContext context, IServiceProvider serviceProvider)
-    {
+public class UserSeeder : ISeeder {
+    public async Task SeedAsync(DbContext context, IServiceProvider serviceProvider) {
         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        
-        if (!await userManager.Users.AnyAsync())
-        {
-            var adminUser = new ApplicationUser
-            {
+        if (!await userManager.Users.AnyAsync()) {
+            var adminUser = new ApplicationUser {
                 UserName = "admin@example.com",
                 Email = "admin@example.com",
                 EmailConfirmed = true
             };
-            
             await userManager.CreateAsync(adminUser, "Admin@123");
             await userManager.AddToRoleAsync(adminUser, "Admin");
         }
@@ -272,163 +210,57 @@ public class UserSeeder : ISeeder
 }
 ```
 
-### Built-in Seeders
-
-**RoleSeeder** (order: 1)
-- Seeds all predefined roles from the `ApplicationRoles` enum
-- Ensures roles exist before any user creation
-- Idempotent - safe to run multiple times
-
 ## 🐳 Docker Support
 
-### Building the Docker Image
+- Multi-stage Dockerfile for optimized builds
+- Installs Bun/Node, builds frontend/backend, publishes minimal runtime image
 
+**Build and run:**
 ```bash
 docker build -f ASPNETStarter.Server/Dockerfile -t aspnetstarter:latest .
-```
-
-### Running the Container
-
-```bash
 docker run -d -p 8080:8080 --name aspnetstarter aspnetstarter:latest
 ```
+App available at `http://localhost:8080`
 
-The application will be available at `http://localhost:8080`
+## 🔌 API Versioning
 
-### Docker Architecture
-
-The Dockerfile uses a multi-stage build process:
-
-1. **with-bun stage**: Installs Node.js v24 and Bun in the SDK image
-2. **build stage**: Restores dependencies and builds both frontend and backend
-3. **publish stage**: Creates optimized production build
-4. **final stage**: Minimal runtime image with only necessary files
-
-## 🔌 API
-
-### API Versioning
-
-This project uses namespace-based API versioning with the `RoutePrefixConvention`. Controllers in different namespaces can have different route prefixes:
-
-- `ASPNETStarter.Server.Controllers.v1` → `/api/v1`
-- Add `ASPNETStarter.Server.Controllers.v2` → `/api/v2` for future versions
-
-### Swagger/OpenAPI
-
-Swagger UI is available in development mode:
-- URL: `https://localhost:5001/swagger`
-- Provides interactive API documentation
-- **Bearer Authentication**: Click "Authorize" button and enter your JWT token
-- Test endpoints directly from the browser
-- Includes Identity API endpoints and custom controllers
-
-### Authentication in Swagger
-
-1. Register/Login using Identity endpoints
-2. Copy the received access token
-3. Click the "Authorize" button in Swagger UI
-4. Enter: `Bearer <your-token>` (or just the token)
-5. Test protected endpoints
+- Namespace-based versioning via `RoutePrefixConvention`
+- Controllers in `Controllers.v1` → `/api/v1`, add `Controllers.v2` for `/api/v2`
 
 ## 🎨 Frontend
 
-### Technology Stack
+- **Vue.js 3** (Composition API)
+- **TypeScript**
+- **Vite 7.x**
+- **Bun** (recommended) or Node.js
+- **ESLint** for linting
+- **Hot Module Replacement**
+- **Path Aliases** (`@/` for `src`)
+- **API Proxy** for seamless backend integration
 
-- **Framework**: Vue.js 3 (Composition API)
-- **Language**: TypeScript
-- **Build Tool**: Vite 7.x
-- **Styling**: CSS3 with scoped styles
-- **Linting**: ESLint 9.x with Vue plugin
-
-### Key Features
-
-- **Hot Module Replacement (HMR)**: Instant updates during development
-- **TypeScript Support**: Full type safety
-- **Component-based Architecture**: Reusable Vue components
-- **Path Aliases**: Use `@/` to reference the `src` directory
-- **API Proxy**: Seamless backend integration during development
-
-### Development Scripts
-
+**Frontend scripts:**
 ```bash
-# Start dev server with HMR
-bun run dev
-
-# Type-check TypeScript
-bun run type-check
-
-# Build for production
-bun run build
-
-# Preview production build
-bun run preview
-
-# Lint and fix code
-bun run lint
+bun run dev      # Start dev server
+bun run type-check # Type-check TypeScript
+bun run build    # Build for production
+bun run preview  # Preview production build
+bun run lint     # Lint and fix code
 ```
 
 ## ⚙️ Configuration
 
-### Backend Configuration
-
-**appsettings.json** / **appsettings.Development.json**
-- **ConnectionStrings:DefaultConnection**: Database connection string
-- Configure logging levels
-- CORS policies
-- Identity options (password requirements, lockout settings, etc.)
-- Custom application settings
-
-**launchSettings.json**
-- Development server ports
-- Environment variables
-- SSL configuration
-
-**Example appsettings.json:**
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=ASPNETStarterDB;Trusted_Connection=true;TrustServerCertificate=true;"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*"
-}
-```
-
-### Frontend Configuration
-
-**vite.config.ts**
-- Development server port (default: 57409)
-- API proxy configuration
-- Build optimizations
-- Path aliases
-
-**package.json**
-- Dependencies and dev dependencies
-- Script commands
-- Engine requirements (Bun/Node versions)
+- **Backend**: `appsettings.json`, `launchSettings.json` for connection strings, logging, CORS, Identity options
+- **Frontend**: `vite.config.ts` for dev server, proxy, build options
+- **package.json** for dependencies and scripts
 
 ## 🔄 Renaming the Project
 
-A PowerShell script is provided to rename the entire project:
-
+Use the provided PowerShell script to rename the project:
 ```powershell
-# Windows (PowerShell)
-.\rename-project.ps1 -NewProjectName "YourProjectName"
+./rename-project.ps1 -NewProjectName "YourProjectName"
 ```
-
-This script will:
-1. Update all file contents (solution, projects, source files)
-2. Rename files containing "ASPNETStarter" or "aspnetstarter"
-3. Rename directories
-4. Clean build artifacts (bin, obj, dist, node_modules)
-5. Update the solution file
-
-After renaming:
+- Updates all file contents, renames files/folders, cleans build artifacts
+- After renaming:
 ```bash
 dotnet restore
 cd yourprojectname.client
@@ -439,27 +271,12 @@ dotnet build
 
 ## 📦 Dependencies
 
-### Backend
-
-- **Microsoft.AspNetCore.SpaProxy** (8.x) - SPA development server integration
-- **Microsoft.AspNetCore.Identity.EntityFrameworkCore** (8.0.20) - Identity system with EF Core
-- **Microsoft.EntityFrameworkCore.SqlServer** (8.0.20) - SQL Server database provider
-- **Microsoft.EntityFrameworkCore.Tools** (8.0.20) - EF Core migrations and tooling
-- **Swashbuckle.AspNetCore** (6.6.2) - Swagger/OpenAPI documentation
-- **Microsoft.VisualStudio.Web.CodeGeneration.Design** (8.0.7) - Code generation tools
-
-### Frontend
-
-- **vue** (3.5.22) - Progressive JavaScript framework
-- **vite** (7.1.7) - Next generation frontend tooling
-- **typescript** (5.9.0) - Typed JavaScript
-- **@vitejs/plugin-vue** (6.0.1) - Vue plugin for Vite
-- **eslint** (9.33.0) - Code linting
-- **vue-tsc** (3.1.0) - TypeScript compiler for Vue
+- **Backend**: Microsoft.AspNetCore.Identity.EntityFrameworkCore, EntityFrameworkCore.SqlServer, Swashbuckle.AspNetCore, etc.
+- **Frontend**: vue, vite, typescript, @vitejs/plugin-vue, eslint, vue-tsc
 
 ## 📝 License
 
-MIT License. See `LICENSE` file for details.
+MIT License. See `LICENSE` for details.
 
 ---
 

@@ -1,14 +1,13 @@
 ﻿using System.Reflection;
 using ASPNETStarter.Server.Seeders;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace ASPNETStarter.Server.Services;
 
 public class SeederService
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<SeederService> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
     public SeederService(IServiceProvider serviceProvider, ILogger<SeederService> logger)
     {

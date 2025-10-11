@@ -1,5 +1,4 @@
 ﻿using ASPNETStarter.Server.Application;
-using Microsoft.EntityFrameworkCore;
 using ASPNETStarter.Server.Services;
 
 namespace ASPNETStarter.Server.Extensions;
@@ -10,12 +9,12 @@ public static class ApplicationBuilderExtensions
     {
         using var scope = app.ApplicationServices.CreateScope();
         var services = scope.ServiceProvider;
-        
+
         try
         {
             var context = services.GetRequiredService<ApplicationDbContext>();
             var seederService = services.GetRequiredService<SeederService>();
-            
+
             await seederService.SeedAllAsync(context);
         }
         catch (Exception ex)
