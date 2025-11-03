@@ -8,7 +8,7 @@ namespace ASPNETStarter.Server.Seeders;
 [Seeder(1)]
 public class RoleSeeder : ISeeder
 {
-    public async Task SeedAsync(DbContext context, IServiceProvider serviceProvider)
+    public async Task SeedAsync(ApplicationDbContext context, IServiceProvider serviceProvider)
     {
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
@@ -17,7 +17,8 @@ public class RoleSeeder : ISeeder
         foreach (var role in roles)
         {
             var roleName = role.ToString();
-            if (!await roleManager.RoleExistsAsync(roleName)) await roleManager.CreateAsync(new IdentityRole(roleName));
+            var identityRole = new IdentityRole(roleName);
+            await roleManager.CreateAsync(identityRole);
         }
     }
 }
