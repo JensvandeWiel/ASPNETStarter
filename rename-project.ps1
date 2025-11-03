@@ -186,7 +186,7 @@ Write-Host "  - Cleaned $cleanedDirs build directories" -ForegroundColor White
 
 Write-Host "`nNext steps:" -ForegroundColor Yellow
 Write-Host "  1. Restore NuGet packages: dotnet restore" -ForegroundColor White
-Write-Host "  2. Install client dependencies: cd $newProjectNameLower.client && bun install" -ForegroundColor White
+Write-Host "  2. Install client dependencies: cd $newProjectNameLower.client && npm install" -ForegroundColor White
 Write-Host "  3. Build the solution: dotnet build" -ForegroundColor White
 Write-Host "  4. Test the application: dotnet run" -ForegroundColor White
 

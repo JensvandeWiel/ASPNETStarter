@@ -1,6 +1,6 @@
 ﻿# ASPNETStarter
 
-A modern full-stack web application starter template built with ASP.NET Core 8.0 and Vue.js 3, featuring TypeScript, Vite, Bun, Entity Framework Core, and ASP.NET Core Identity for authentication and authorization.
+A modern full-stack web application starter template built with ASP.NET Core 8.0 and Vue.js 3, featuring TypeScript, Vite, npm, Entity Framework Core, and ASP.NET Core Identity for authentication and authorization.
 
 ## 🏗️ Architecture
 
@@ -8,7 +8,7 @@ A modern full-stack web application starter template built with ASP.NET Core 8.0
 - **Frontend**: Vue.js 3 (Composition API) with TypeScript and Vite
 - **Database**: SQL Server via Entity Framework Core 8.0
 - **Authentication**: ASP.NET Core Identity with filterable endpoints and role-based authorization
-- **Package Manager**: Bun (recommended) or Node.js
+- **Package Manager**: npm with Node.js
 - **Containerization**: Docker with multi-stage builds
 
 ## 📁 Project Structure
@@ -58,8 +58,8 @@ ASPNETStarter/
 │   │   └── shims-vue.d.ts         # TypeScript shims
 │   ├── public/                    # Public static files (favicon, etc.)
 │   ├── vite.config.ts             # Vite configuration
-│   ├── package.json               # Node/Bun dependencies
-│   ├── bun.lock                   # Bun lockfile
+│   ├── package.json               # Node/npm dependencies
+│   ├── package-lock.json          # npm lockfile
 │   ├── tsconfig.json              # TypeScript config
 │   ├── tsconfig.app.json
 │   ├── tsconfig.node.json
@@ -75,8 +75,7 @@ ASPNETStarter/
 ### Prerequisites
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Bun](https://bun.sh/) (v1.1.0 or higher) - Recommended for frontend
-- [Node.js](https://nodejs.org/) (v20.19.0+ or v22.12.0+) - Alternative to Bun
+- [Node.js](https://nodejs.org/) (v20.19.0+ or v22.12.0+)
 - [SQL Server](https://www.microsoft.com/sql-server) (LocalDB, Express, or full version)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop) (optional)
 
@@ -105,7 +104,7 @@ ASPNETStarter/
 5. **Install frontend dependencies**
    ```bash
    cd aspnetstarter.client
-   bun install
+   npm install
    cd ..
    ```
 
@@ -125,7 +124,7 @@ dotnet run --project ASPNETStarter.Server
 
 ```bash
 cd aspnetstarter.client
-bun run dev
+npm run dev
 ```
 
 #### Production Build
@@ -213,7 +212,7 @@ public class UserSeeder : ISeeder {
 ## 🐳 Docker Support
 
 - Multi-stage Dockerfile for optimized builds
-- Installs Bun/Node, builds frontend/backend, publishes minimal runtime image
+- Installs Node.js, builds frontend/backend, publishes minimal runtime image
 
 **Build and run:**
 ```bash
@@ -232,7 +231,7 @@ App available at `http://localhost:8080`
 - **Vue.js 3** (Composition API)
 - **TypeScript**
 - **Vite 7.x**
-- **Bun** (recommended) or Node.js
+- **Node.js** with npm
 - **ESLint** for linting
 - **Hot Module Replacement**
 - **Path Aliases** (`@/` for `src`)
@@ -240,11 +239,11 @@ App available at `http://localhost:8080`
 
 **Frontend scripts:**
 ```bash
-bun run dev      # Start dev server
-bun run type-check # Type-check TypeScript
-bun run build    # Build for production
-bun run preview  # Preview production build
-bun run lint     # Lint and fix code
+npm run dev      # Start dev server
+npm run type-check # Type-check TypeScript
+npm run build    # Build for production
+npm run preview  # Preview production build
+npm run lint     # Lint and fix code
 ```
 
 ## ⚙️ Configuration
@@ -264,7 +263,7 @@ Use the provided PowerShell script to rename the project:
 ```bash
 dotnet restore
 cd yourprojectname.client
-bun install
+npm install
 cd ..
 dotnet build
 ```
