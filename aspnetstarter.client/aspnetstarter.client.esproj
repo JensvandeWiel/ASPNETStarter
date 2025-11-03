@@ -10,6 +10,10 @@
         <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
     </PropertyGroup>
     <ItemGroup>
+      <Script Include="src\tsconfig.json" />
       <Script Include="tsconfig.json" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="src\assets\" />
     </ItemGroup>
 </Project>

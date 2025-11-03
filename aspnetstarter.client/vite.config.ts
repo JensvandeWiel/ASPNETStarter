@@ -1,7 +1,8 @@
-import {fileURLToPath, URL} from 'node:url';
+import path from 'node:path';
 import {defineConfig} from 'vite';
 import plugin from '@vitejs/plugin-vue';
 import {env} from 'node:process';
+import tailwindcss from '@tailwindcss/vite'
 
 
 /**
@@ -31,18 +32,22 @@ const target = getProxyTarget();
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [plugin()],
+  plugins: [plugin(), tailwindcss()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   server: {
     proxy: {
       '^/api/.*': {
         target,
         secure: false
-      }
+      },
+      '^/auth/.*': {
+        target,
+        secure: false
+      },
     },
     port: parseInt(env.DEV_SERVER_PORT ?? '3000'),
     host: '127.0.0.1'

@@ -1,47 +1,24 @@
 <script lang="ts" setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { RouterView } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import {NotificationTypeIcons, useNotifyStore} from "@/stores/notify-store.ts";
+import { XIcon } from 'lucide-vue-next';
+import {cn} from "@/lib/utils.ts";
+const notifyStore = useNotifyStore();
+const { notifications } = storeToRefs(notifyStore);
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" height="125" src="./assets/logo.svg" width="125"/>
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!"/>
+  <div class="toast toast-end toast-top absolute w-1/3 right-0 z-50">
+    <div role="alert" v-for="notification in notifications" :class="cn('flex-row w-full alert', 'alert-' + notification.type, notification.soft ? 'alert-soft' : '')">
+      <component :is="NotificationTypeIcons[notification.type]" />
+      <span>{{ notification.message }}</span>
+      <div class="ml-auto">
+        <button @click="notifyStore.removeNotification(notification)" :class="cn('btn btn-square btn-ghost btn-sm')">
+          <XIcon class="h-5 w-5" />
+        </button>
+      </div>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome/>
-  </main>
+  </div>
+  <RouterView/>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>

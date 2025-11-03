@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using ASPNETStarter.Server.Models;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http.Metadata;
@@ -74,15 +75,14 @@ public static class IdentityApiEndpointRouteBuilderExtensions
         // We'll figure out a unique endpoint name based on the final route pattern during endpoint generation.
         string? confirmEmailEndpointName = null;
 
-        var routeGroup = endpoints.MapGroup("").WithOpenApi(op =>
+        var routeGroup = endpoints.MapGroup("/auth").WithOpenApi(op =>
         {
-            
             var tag = new OpenApiTag
             {
                 Name = "Identity",
                 Description = "APIs for user registration, login, logout, and account management."
             };
-            
+
             op.Tags = [tag];
             return op;
         });
@@ -160,11 +160,11 @@ public static class IdentityApiEndpointRouteBuilderExtensions
                 var user = await userManager.GetUserAsync(claimsPrincipal);
                 if (user is null) return TypedResults.Ok();
                 await signInManager.SignOutAsync();
-                
+
                 // Invalidate all existing bearer tokens by updating the security stamp.
                 if (userManager.SupportsUserSecurityStamp)
                     await userManager.UpdateSecurityStampAsync(user);
-                
+
                 return TypedResults.Ok();
             }).WithOpenApi(op =>
             {
@@ -373,8 +373,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions
                     });
                 });
 
-            if (options.ExcludegInfoGet)
-                accountGroup.MapGet("/info", async Task<Results<Ok<InfoResponse>, ValidationProblem, NotFound>>
+            if (!options.ExcludeInfoGet)
+                accountGroup.MapGet("/info", async Task<Results<Ok<ExtendedInfoResponse>, ValidationProblem, NotFound>>
                     (ClaimsPrincipal claimsPrincipal, [FromServices] IServiceProvider sp) =>
                 {
                     var userManager = sp.GetRequiredService<UserManager<TUser>>();
@@ -384,7 +384,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions
                 });
 
             if (!options.ExcludeInfoPost)
-                accountGroup.MapPost("/info", async Task<Results<Ok<InfoResponse>, ValidationProblem, NotFound>>
+                accountGroup.MapPost("/info", async Task<Results<Ok<ExtendedInfoResponse>, ValidationProblem, NotFound>>
                 (ClaimsPrincipal claimsPrincipal, [FromBody] InfoRequest infoRequest, HttpContext context,
                     [FromServices] IServiceProvider sp) =>
                 {
@@ -423,6 +423,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions
         async Task SendConfirmationEmailAsync(TUser user, UserManager<TUser> userManager, HttpContext context,
             string email, bool isChange = false)
         {
+            if (options.DisableEmailConfirmation) return;
+
             if (confirmEmailEndpointName is null)
                 throw new NotSupportedException("No email confirmation endpoint was registered!");
 
@@ -488,14 +490,19 @@ public static class IdentityApiEndpointRouteBuilderExtensions
         return TypedResults.ValidationProblem(errorDictionary);
     }
 
-    private static async Task<InfoResponse> CreateInfoResponseAsync<TUser>(TUser user, UserManager<TUser> userManager)
+    private static async Task<ExtendedInfoResponse> CreateInfoResponseAsync<TUser>(TUser user, UserManager<TUser> userManager)
         where TUser : class
     {
-        return new InfoResponse
+        ApplicationUser appUser = user as ApplicationUser ?? throw new NotSupportedException("User must be of type ApplicationUser.");
+        
+        return new ExtendedInfoResponse
         {
+            Id = await userManager.GetUserIdAsync(user),
             Email = await userManager.GetEmailAsync(user) ??
                     throw new NotSupportedException("Users must have an email."),
-            IsEmailConfirmed = await userManager.IsEmailConfirmedAsync(user)
+            IsEmailConfirmed = await userManager.IsEmailConfirmedAsync(user),
+            Roles = await userManager.GetRolesAsync(user),
+            UserName = await userManager.GetUserNameAsync(user)
         };
     }
 
