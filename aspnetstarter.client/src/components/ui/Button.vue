@@ -1,7 +1,7 @@
-<script lang="ts" setup>
+<script setup>
 import {computed} from 'vue'
 import {cva} from 'class-variance-authority'
-import {cn} from '@/lib/utils'
+import {cn} from '@/lib/utils.js'
 
 const buttonVariants = cva('btn', {
   variants: {
@@ -36,21 +36,34 @@ const buttonVariants = cva('btn', {
   },
 })
 
-interface ButtonProps {
-  variant?: NonNullable<Parameters<typeof buttonVariants>[0]>['variant']
-  style?: NonNullable<Parameters<typeof buttonVariants>[0]>['style']
-  size?: NonNullable<Parameters<typeof buttonVariants>[0]>['size']
-  block?: boolean
-  wide?: boolean
-  square?: boolean
-  circle?: boolean
-  active?: boolean
-  disabled?: boolean
-  type?: 'button' | 'submit' | 'reset'
-  class?: string
-}
+/**
+ * @typedef {Object} ButtonProps
+ * @property {string} [variant='neutral']
+ * @property {string} [style]
+ * @property {string} [size='md']
+ * @property {boolean} [block]
+ * @property {boolean} [wide]
+ * @property {boolean} [square]
+ * @property {boolean} [circle]
+ * @property {boolean} [active]
+ * @property {boolean} [disabled]
+ * @property {string} [type='button']
+ * @property {string} [class]
+ */
 
-const props = defineProps<ButtonProps>()
+const props = defineProps({
+  variant: {type: String, default: 'neutral'},
+  style: {type: String, default: null},
+  size: {type: String, default: 'md'},
+  block: {type: Boolean, default: false},
+  wide: {type: Boolean, default: false},
+  square: {type: Boolean, default: false},
+  circle: {type: Boolean, default: false},
+  active: {type: Boolean, default: false},
+  disabled: {type: Boolean, default: false},
+  type: {type: String, default: 'button'},
+  class: {type: String, default: null},
+})
 
 const classes = computed(() => cn(
     buttonVariants({

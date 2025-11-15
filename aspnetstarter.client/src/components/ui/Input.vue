@@ -1,7 +1,7 @@
-<script lang="ts" setup>
+<script setup>
 import {computed} from 'vue'
 import {cva} from 'class-variance-authority'
-import {cn} from '@/lib/utils'
+import {cn} from '@/lib/utils.js'
 
 const inputVariants = cva('input', {
   variants: {
@@ -32,18 +32,28 @@ const inputVariants = cva('input', {
   },
 })
 
-interface InputProps {
-  modelValue?: string | number
-  type?: string
-  variant?: NonNullable<Parameters<typeof inputVariants>[0]>['variant']
-  style?: NonNullable<Parameters<typeof inputVariants>[0]>['style']
-  size?: NonNullable<Parameters<typeof inputVariants>[0]>['size']
-  disabled?: boolean
-  placeholder?: string
-  class?: string
-}
+/**
+ * @typedef {Object} InputProps
+ * @property {string|number} [modelValue]
+ * @property {string} [type]
+ * @property {string} [variant='neutral']
+ * @property {string} [style]
+ * @property {string} [size='md']
+ * @property {boolean} [disabled]
+ * @property {string} [placeholder]
+ * @property {string} [class]
+ */
 
-const props = defineProps<InputProps>()
+const props = defineProps({
+  modelValue: {type: [String, Number], default: null},
+  type: {type: String, default: 'text'},
+  variant: {type: String, default: 'neutral'},
+  style: {type: String, default: null},
+  size: {type: String, default: 'md'},
+  disabled: {type: Boolean, default: false},
+  placeholder: {type: String, default: null},
+  class: {type: String, default: null},
+})
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -53,8 +63,8 @@ const classes = computed(() => cn(inputVariants({
   size: props.size,
 }), props.class))
 
-function onInput(e: Event) {
-  const target = e.target as HTMLInputElement
+function onInput(e) {
+  const target = e.target
   emit('update:modelValue', target.value)
 }
 

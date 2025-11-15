@@ -12,19 +12,19 @@
   </label>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import {computed} from 'vue';
 
 const props = defineProps({
   text: {type: String, default: ''},
-  position: {type: String as () => 'before' | 'after', default: 'before'},
+  position: {type: String, default: 'before'},
   floating: {type: Boolean, default: false},
   for: {type: String, default: undefined},
   class: {type: String, default: ''},
 });
 
 const labelClass = computed(() => {
-  let base = props.floating ? 'floating-label' : '';
+  const base = props.floating ? 'floating-label' : '';
   return [base, props.class].filter(Boolean).join(' ');
 });
 </script>

@@ -1,8 +1,11 @@
-<script lang="ts" setup>
+<script setup>
 import {defineProps} from 'vue';
-import {cn} from "@/lib/utils.ts";
+import {cn} from "@/lib/utils.js";
 
-const props = defineProps<{ class?: string, end?: boolean }>();
+const props = defineProps({
+  class: {type: String, default: null},
+  end: {type: Boolean, default: false},
+});
 </script>
 
 <template>

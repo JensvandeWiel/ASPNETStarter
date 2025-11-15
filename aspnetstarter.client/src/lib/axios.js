@@ -1,11 +1,13 @@
 import axios from 'axios';
-import {useAuthStore} from '@/stores/auth-store';
-import {router} from '@/main';
-import {NotificationType, useNotifyStore} from "@/stores/notify-store.ts";
+import {useAuthStore} from '@/stores/auth-store.js';
+import {router} from '@/main.js';
+import {NotificationType, useNotifyStore} from "@/stores/notify-store.js";
 
 const api = axios.create();
 
-// Request interceptor: add token to /api requests
+/**
+ * Request interceptor: add token to /api requests
+ */
 api.interceptors.request.use((config) => {
   const authStore = useAuthStore();
   if (config.url && (config.url.startsWith('/api') || config.url.startsWith('api') || config.url.startsWith('auth') || config.url.startsWith('/auth'))) {
@@ -17,7 +19,9 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor: refresh token if expired
+/**
+ * Response interceptor: refresh token if expired
+ */
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
@@ -45,3 +49,4 @@ api.interceptors.response.use(
 );
 
 export default api;
+

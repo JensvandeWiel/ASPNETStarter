@@ -1,16 +1,16 @@
 import {defineStore} from "pinia";
-import api from "@/lib/axios";
-import type {User} from "@/types/user";
+import api from "@/lib/axios.js";
 
-interface State {
-  user: User | null;
-  loading: boolean;
-  error: string | null;
-  fetchPromise: Promise<User | null> | null;
-}
+/**
+ * @typedef {Object} State
+ * @property {any} user
+ * @property {boolean} loading
+ * @property {string|null} error
+ * @property {Promise|null} fetchPromise
+ */
 
 export const useUserStore = defineStore('user', {
-  state: (): State => ({
+  state: () => ({
     user: null,
     loading: false,
     error: null,
@@ -24,18 +24,29 @@ export const useUserStore = defineStore('user', {
   },
 
   actions: {
-    setUser(user: User | null) {
+    /**
+     * Set the current user
+     * @param {any} user
+     */
+    setUser(user) {
       this.user = user;
       this.error = null;
     },
 
+    /**
+     * Clear the current user
+     */
     clearUser() {
       this.user = null;
       this.error = null;
       this.fetchPromise = null;
     },
 
-    async getUser(): Promise<User | null> {
+    /**
+     * Get the current user, fetching if needed
+     * @returns {Promise<any>}
+     */
+    async getUser() {
       // If already loaded, return it
       if (this.user !== null) {
         return this.user;
@@ -51,21 +62,30 @@ export const useUserStore = defineStore('user', {
       return this.fetchPromise;
     },
 
-    async fetchUser(): Promise<User | null> {
+    /**
+     * Fetch the user from the server
+     * @returns {Promise<any>}
+     */
+    async fetchUser() {
       this.loading = true;
       this.error = null;
 
-      const response = await api.get<User>('/auth/manage/info');
+      const response = await api.get('/auth/manage/info');
 
       this.user = response.data;
       this.loading = false;
       return this.user;
     },
 
-    refetchUser(): Promise<User | null> {
+    /**
+     * Refetch the user
+     * @returns {Promise<any>}
+     */
+    refetchUser() {
       this.fetchPromise = null;
       this.user = null;
       return this.getUser();
     }
   }
 });
+

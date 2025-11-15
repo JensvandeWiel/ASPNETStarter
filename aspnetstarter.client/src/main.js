@@ -6,8 +6,8 @@ import App from './App.vue'
 import AppLayout from "@/components/layouts/AppLayout.vue";
 import {createRouter, createWebHistory} from "vue-router";
 import Login from "@/components/pages/Login.vue";
-import {useAuthStore} from "@/stores/auth-store.ts";
-import {useUserStore} from "@/stores/user-store.ts";
+import {useAuthStore} from "@/stores/auth-store.js";
+import {useUserStore} from "@/stores/user-store.js";
 import WrongRolePage from "@/components/pages/WrongRolePage.vue";
 import Home from "@/components/pages/Home.vue";
 
@@ -30,10 +30,11 @@ app.use(pinia)
 
 const authStore = useAuthStore();
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+
 // Replace single auth check with ordered checks:
 // 1) requiresAuth (redirect to /login if not authenticated)
 // 2) requiresOneOfRoles (fetches user if needed and checks roles)
@@ -44,7 +45,7 @@ router.beforeEach(async (to, _, next) => {
   }
 
   // 2) Roles check (only if requiresAuth is true AND we're authenticated)
-  const requiredRoles = to.meta['requiresOneOfRoles'] as string[] | undefined;
+  const requiredRoles = to.meta['requiresOneOfRoles'];
   if (to.meta['requiresAuth'] && requiredRoles && requiredRoles.length > 0) {
     const userStore = useUserStore();
 
@@ -78,4 +79,3 @@ router.afterEach((to) => {
 app.use(router)
 app.mount('#app')
 
-export {router};

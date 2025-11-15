@@ -1,5 +1,5 @@
-<script lang="ts" setup>
-import {useAuthStore} from "@/stores/auth-store.ts";
+<script setup>
+import {useAuthStore} from "@/stores/auth-store.js";
 import {useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
 import Button from "@/components/ui/Button.vue";
@@ -16,7 +16,7 @@ const doLogin = async () => {
   try {
     await authStore.login(email.value, password.value)
     await router.push("/")
-  } catch (err: any) {
+  } catch (err) {
     loginError.value = err.message
     password.value = ""
   }

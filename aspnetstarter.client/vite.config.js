@@ -7,9 +7,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 /**
  * Determines the target URL for the development server proxy
- * @returns The target URL for proxying API requests
+ * @returns {string} The target URL for proxying API requests
  */
-function getProxyTarget(): string {
+function getProxyTarget() {
   // Check for HTTPS port first
   if (env.ASPNETCORE_HTTPS_PORT !== undefined && env.ASPNETCORE_HTTPS_PORT.length > 0) {
     return `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`;
@@ -53,3 +53,4 @@ export default defineConfig({
     host: '127.0.0.1'
   }
 })
+

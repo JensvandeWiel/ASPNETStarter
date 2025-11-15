@@ -1,13 +1,13 @@
-<script lang="ts" setup>
-import {cn} from "@/lib/utils.ts";
+<script setup>
+import {cn} from "@/lib/utils.js";
 
-const props = defineProps<{
-  to: string;
-  label: string;
-  isTitle?: boolean,
-  class?: string,
-  end?: boolean
-}>();
+const props = defineProps({
+  to: {type: String, required: true},
+  label: {type: String, required: true},
+  isTitle: {type: Boolean, default: false},
+  class: {type: String, default: null},
+  end: {type: Boolean, default: false},
+});
 </script>
 
 <template>

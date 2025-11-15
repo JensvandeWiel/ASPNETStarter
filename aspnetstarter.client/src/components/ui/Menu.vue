@@ -1,8 +1,8 @@
-<script lang="ts" setup>
+<script setup>
 
 import MenuLink from "@/components/ui/MenuLink.vue";
 import MenuItem from "@/components/ui/MenuItem.vue";
-import {useAuthStore} from "@/stores/auth-store.ts";
+import {useAuthStore} from "@/stores/auth-store.js";
 import {useRouter} from "vue-router";
 import {LogOut} from 'lucide-vue-next';
 

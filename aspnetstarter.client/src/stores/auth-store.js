@@ -1,12 +1,12 @@
 import {defineStore} from "pinia";
-import axios, {AxiosError, type AxiosResponse} from "axios";
-import type {
-  AccessTokenResponse,
-  LoginOptions,
-  LoginRequestBody,
-  RefreshRequestBody
-} from "@/types/auth.ts";
-import {$ResetPinia} from "@/lib/pinia.ts";
+import axios, {AxiosError} from "axios";
+import {$ResetPinia} from "@/lib/pinia.js";
+
+/**
+ * @typedef {Object} State
+ * @property {string} token
+ * @property {string} refreshToken
+ */
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -18,38 +18,56 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    setToken(token: string) {
+    /**
+     * Set the access token
+     * @param {string} token
+     */
+    setToken(token) {
       this.token = token;
       localStorage.setItem('token', token);
     },
-    setRefreshToken(refreshToken: string) {
+    /**
+     * Set the refresh token
+     * @param {string} refreshToken
+     */
+    setRefreshToken(refreshToken) {
       this.refreshToken = refreshToken;
       localStorage.setItem('refreshToken', refreshToken);
     },
+    /**
+     * Clear both tokens
+     */
     clearTokens() {
       this.token = '';
       this.refreshToken = '';
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
     },
-    async login(email: string, password: string, loginOptions?: LoginOptions) {
-      let loginBody: LoginRequestBody = {
+    /**
+     * Login with email and password
+     * @param {string} email
+     * @param {string} password
+     * @param {any} [loginOptions]
+     * @returns {Promise<any>}
+     */
+    async login(email, password, loginOptions) {
+      const loginBody = {
         email,
         password
       };
-      let response: AxiosResponse<AccessTokenResponse>;
+
+      let response;
 
       try {
-        response = await axios<AccessTokenResponse>({
+        response = await axios({
           method: 'post',
           url: 'auth/login',
           data: loginBody,
           params: loginOptions,
           responseType: 'json',
-
         });
       } catch (e) {
-        if ((e as AxiosError).response?.status === 401) {
+        if (e.response?.status === 401) {
           throw new Error('Ongeldige inloggegevens');
         } else {
           throw e;
@@ -62,25 +80,29 @@ export const useAuthStore = defineStore('auth', {
       return response.data;
     },
 
-    async logout(router: any) {
-      let response: AxiosResponse | undefined = undefined;
+    /**
+     * Logout the user
+     * @param {any} router
+     * @returns {Promise<any>}
+     */
+    async logout(router) {
+      let response = undefined;
 
       if (!this.isAuthenticated) {
         throw new Error('Niet ingelogd');
       }
 
       try {
-        response = await axios<AccessTokenResponse>({
+        response = await axios({
           method: 'post',
           url: 'auth/logout',
           headers: {
             'Authorization': `Bearer ${this.token}`
           },
           responseType: 'json',
-
         });
       } catch (e) {
-        const error = e as AxiosError;
+        const error = e;
         if (error.response?.status === 401) {
           // Is already logged out
           response = error.response;
@@ -91,36 +113,43 @@ export const useAuthStore = defineStore('auth', {
       this.clearTokens();
 
       // Clear all stores
-      // @ts-expect-error -- adding 'all' method dynamically
       $ResetPinia().all()
 
       await this.redirectToLogin(router);
       return response;
     },
 
-    async redirectToLogin(router: any) {
+    /**
+     * Redirect to login page
+     * @param {any} router
+     * @returns {Promise<void>}
+     */
+    async redirectToLogin(router) {
       await router.push('/login');
     },
 
+    /**
+     * Refresh the access token
+     * @returns {Promise<any>}
+     */
     async refresh() {
+      const refreshToken = this.refreshToken;
 
-      let refreshToken = this.refreshToken;
-
-      let refreshRequestBody: RefreshRequestBody = {
+      const refreshRequestBody = {
         refreshToken
       };
-      let response: AxiosResponse<AccessTokenResponse>;
+
+      let response;
 
       try {
-        response = await axios<AccessTokenResponse>({
+        response = await axios({
           method: 'post',
           url: 'auth/refresh',
           data: refreshRequestBody,
           responseType: 'json',
-
         });
       } catch (e) {
-        if ((e as AxiosError).response?.status === 401) {
+        if (e.response?.status === 401) {
           throw new Error('Niet ingelogd of sessie verlopen');
         } else {
           throw e;
@@ -134,3 +163,4 @@ export const useAuthStore = defineStore('auth', {
     }
   }
 });
+
