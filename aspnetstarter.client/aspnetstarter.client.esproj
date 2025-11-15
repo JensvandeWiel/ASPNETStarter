@@ -10,7 +10,7 @@
         <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
     </PropertyGroup>
     <ItemGroup>
-        <Script Include="jsconfig.json" />
+        <Script Include="jsconfig.json"/>
         <Script Include="src\tsconfig.json"/>
     </ItemGroup>
     <ItemGroup>

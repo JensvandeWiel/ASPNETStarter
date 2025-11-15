@@ -12,7 +12,8 @@ const props = defineProps({
 
 <template>
   <li :class="props.end ? 'mt-auto' : ''">
-    <RouterLink :class="cn(props.isTitle ? 'menu-title' : '', props.class)" :exact-active-class="props.to === '/' ? 'menu-active' : ''"
+    <RouterLink :class="cn(props.isTitle ? 'menu-title' : '', props.class)"
+                :exact-active-class="props.to === '/' ? 'menu-active' : ''"
                 :to="props.to"
                 active-class="menu-active">
       {{ props.label }}

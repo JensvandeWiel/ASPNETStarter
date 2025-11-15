@@ -50,7 +50,8 @@ public class AuthHelper
                 throw new Exception(errorMessage);
             }
 
-            TestLogger.Logger.Information("User created successfully: {Email} (ID: {UserId}) with roles: {Roles}", email, user.Id, roles);
+            TestLogger.Logger.Information("User created successfully: {Email} (ID: {UserId}) with roles: {Roles}",
+                email, user.Id, roles);
 
             // Assign roles if provided
             if (roles.Length > 0)
@@ -106,7 +107,8 @@ public class AuthHelper
 
         var loginResponse = await client.PostAsJsonAsync("/auth/login", loginPayload);
 
-        TestLogger.Logger.Information("HTTP Response: {StatusCode} {ReasonPhrase}", (int)loginResponse.StatusCode, loginResponse.ReasonPhrase);
+        TestLogger.Logger.Information("HTTP Response: {StatusCode} {ReasonPhrase}", (int)loginResponse.StatusCode,
+            loginResponse.ReasonPhrase);
 
         loginResponse.EnsureSuccessStatusCode();
         var loginResult = await loginResponse.Content.ReadFromJsonAsync<LoginResponse>();

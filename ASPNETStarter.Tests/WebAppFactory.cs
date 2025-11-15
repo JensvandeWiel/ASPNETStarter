@@ -17,7 +17,7 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private readonly MsSqlContainer _sqlContainer = new MsSqlBuilder()
         .WithPassword("YourStrong!Passw0rd")
         .Build();
-    
+
     public async ValueTask InitializeAsync()
     {
         await _sqlContainer.StartAsync();
@@ -40,7 +40,7 @@ public class WebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
             {
                 options.UseSqlServer(_sqlContainer.GetConnectionString() + ";Database=testing");
             });
-            
+
             // Configure Serilog to log to xUnit output
             context.AddLogging(x => x.ClearProviders().AddSerilog(new LoggerConfiguration().WriteTo
                 .XUnit3TestOutput()

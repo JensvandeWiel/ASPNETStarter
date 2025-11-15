@@ -1,6 +1,4 @@
-using System.Text.Json;
 using Serilog;
-using Serilog.Context;
 using Serilog.Sinks.XUnit3;
 
 namespace Tests.Helpers;
@@ -46,13 +44,13 @@ public static class TestLogger
                     outputTemplate:
                     "[TEST] [{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.XUnit3TestOutput(
-                    outputTemplate:
                     "[TEST] [{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
 
             Log.Logger = _logger;
         }
     }
+
     /// <summary>
     ///     Closes and flushes the logger
     /// </summary>

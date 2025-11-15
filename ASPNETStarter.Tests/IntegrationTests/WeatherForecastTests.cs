@@ -1,11 +1,9 @@
-﻿using AutoFixture;
-using Tests.Helpers;
+﻿using Tests.Helpers;
 
 namespace Tests.IntegrationTests;
 
 public class WeatherForecastTests : BaseIntegrationTest
 {
-
     public WeatherForecastTests(WebAppFactory factory) : base(factory)
     {
     }
@@ -30,19 +28,23 @@ public class WeatherForecastTests : BaseIntegrationTest
 
             // Act
             var response = await authenticatedClient.SendAsync(request);
-            TestLogger.Logger.Information("HTTP Response: {StatusCode} {ReasonPhrase}", (int)response.StatusCode, response.ReasonPhrase);
+            TestLogger.Logger.Information("HTTP Response: {StatusCode} {ReasonPhrase}", (int)response.StatusCode,
+                response.ReasonPhrase);
 
             // Assert
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
-            TestLogger.Logger.Information("Response validation: IsEmpty={IsEmpty}, ContentLength={ContentLength}", string.IsNullOrEmpty(content), content.Length);
+            TestLogger.Logger.Information("Response validation: IsEmpty={IsEmpty}, ContentLength={ContentLength}",
+                string.IsNullOrEmpty(content), content.Length);
 
             Assert.False(string.IsNullOrEmpty(content));
-            TestLogger.Logger.Information("Test completed: {TestName}", nameof(GetWeatherForecasts_ShouldReturnOkResponse));
+            TestLogger.Logger.Information("Test completed: {TestName}",
+                nameof(GetWeatherForecasts_ShouldReturnOkResponse));
         }
         catch (Exception ex)
         {
-            TestLogger.Logger.Error(ex, "Test failed: {TestName}, Error: {Error}", nameof(GetWeatherForecasts_ShouldReturnOkResponse), ex.Message);
+            TestLogger.Logger.Error(ex, "Test failed: {TestName}, Error: {Error}",
+                nameof(GetWeatherForecasts_ShouldReturnOkResponse), ex.Message);
             throw;
         }
     }

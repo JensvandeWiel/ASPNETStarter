@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 import {$ResetPinia} from "@/lib/pinia.js";
 
 /**

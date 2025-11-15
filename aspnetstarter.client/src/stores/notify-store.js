@@ -1,4 +1,3 @@
-
 import {defineStore} from "pinia"
 import {CircleAlertIcon, CircleCheckIcon, CircleXIcon, InfoIcon} from "lucide-vue-next";
 
@@ -55,8 +54,12 @@ export const useNotifyStore = defineStore('notify', {
      */
     notify(messageOrError, type, soft) {
       let message = "";
-      if (messageOrError instanceof Error) {message = messageOrError.message;}
-      if (typeof messageOrError === "string") {message = messageOrError;}
+      if (messageOrError instanceof Error) {
+        message = messageOrError.message;
+      }
+      if (typeof messageOrError === "string") {
+        message = messageOrError;
+      }
       const notification = {
         message,
         type,

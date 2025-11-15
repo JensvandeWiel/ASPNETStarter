@@ -11,7 +11,8 @@ const {notifications} = storeToRefs(notifyStore);
 
 <template>
   <div class="toast toast-end toast-top absolute w-1/3 right-0 z-50">
-    <div v-for="notification in notifications" :key="notification.id" :class="cn('flex-row w-full alert', 'alert-' + notification.type, notification.soft ? 'alert-soft' : '')"
+    <div v-for="notification in notifications" :key="notification.id"
+         :class="cn('flex-row w-full alert', 'alert-' + notification.type, notification.soft ? 'alert-soft' : '')"
          role="alert">
       <component :is="NotificationTypeIcons[notification.type]"/>
       <span>{{ notification.message }}</span>
