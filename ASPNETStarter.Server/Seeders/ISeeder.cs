@@ -6,6 +6,7 @@ namespace ASPNETStarter.Server.Services;
 public interface ISeeder
 {
     Task SeedAsync(ApplicationDbContext context, IServiceProvider serviceProvider);
+
     Task<bool> ShouldRunAsync(ApplicationDbContext context, IServiceProvider serviceProvider)
     {
         var type = GetType();

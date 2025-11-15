@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using ASPNETStarter.Server.Application;
+using ASPNETStarter.Server.Models;
 using ASPNETStarter.Server.Seeders;
-using Microsoft.EntityFrameworkCore;
 
 namespace ASPNETStarter.Server.Services;
 
@@ -30,16 +30,17 @@ public class SeederService
         {
             _logger.LogInformation("Seeding with {SeederType}", seederType.Name);
             var seeder = (ISeeder)Activator.CreateInstance(seederType)!;
-            
+
             var shouldRun = await seeder.ShouldRunAsync(context, _serviceProvider);
             if (!shouldRun)
             {
                 _logger.LogInformation("Skipping seeder {SeederType} as it should not run", seederType.Name);
                 continue;
             }
+
             await seeder.SeedAsync(context, _serviceProvider);
             var attr = seederType.GetCustomAttribute<SeederAttribute>();
-            context.SeederHistories.Add(new Models.SeederHistory
+            context.SeederHistories.Add(new SeederHistory
             {
                 SeederName = seederType.Name,
                 LastSeededAt = DateTime.UtcNow,

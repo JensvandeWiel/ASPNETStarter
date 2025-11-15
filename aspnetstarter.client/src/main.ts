@@ -1,7 +1,7 @@
 import './main.css'
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import {createApp} from 'vue'
+import {createPinia} from 'pinia'
 import App from './App.vue'
 import AppLayout from "@/components/layouts/AppLayout.vue";
 import {createRouter, createWebHistory} from "vue-router";
@@ -12,7 +12,8 @@ import WrongRolePage from "@/components/pages/WrongRolePage.vue";
 import Home from "@/components/pages/Home.vue";
 
 const routes = [
-  {path: '/',
+  {
+    path: '/',
     component: AppLayout,
     children: [
       {path: '', component: Home, meta: {requiresAuth: true}, name: 'Thuis'},
@@ -77,4 +78,4 @@ router.afterEach((to) => {
 app.use(router)
 app.mount('#app')
 
-export { router };
+export {router};

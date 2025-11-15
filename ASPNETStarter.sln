@@ -7,6 +7,8 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "aspnetstarter.client", "asp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASPNETStarter.Server", "ASPNETStarter.Server\ASPNETStarter.Server.csproj", "{3299D702-A5F1-477C-93E3-49B1D195EF20}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASPNETStarter.Tests", "ASPNETStarter.Tests\ASPNETStarter.Tests.csproj", "{7D80B8ED-A081-427E-895C-BDF98713C7F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{3299D702-A5F1-477C-93E3-49B1D195EF20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3299D702-A5F1-477C-93E3-49B1D195EF20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3299D702-A5F1-477C-93E3-49B1D195EF20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D80B8ED-A081-427E-895C-BDF98713C7F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D80B8ED-A081-427E-895C-BDF98713C7F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D80B8ED-A081-427E-895C-BDF98713C7F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D80B8ED-A081-427E-895C-BDF98713C7F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -37,26 +37,26 @@ onMounted(() => {
         <p class="mb-4">Voer je inloggegevens in om verder te gaan.</p>
         <form @submit.prevent="doLogin">
           <div class="form-control mb-4">
-            <Label text="Email" for="email">
+            <Label for="email" text="Email">
               <Input
-                id="email"
-                v-model="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-                class="w-full"
+                  id="email"
+                  v-model="email"
+                  class="w-full"
+                  placeholder="m@example.com"
+                  required
+                  type="email"
               />
             </Label>
           </div>
           <div class="form-control mb-4">
-            <Label text="Wachtwoord" for="password">
+            <Label for="password" text="Wachtwoord">
               <Input
-                id="password"
-                v-model="password"
-                type="password"
-                required
-                class="w-full"
-                autocomplete="current-password"
+                  id="password"
+                  v-model="password"
+                  autocomplete="current-password"
+                  class="w-full"
+                  required
+                  type="password"
               />
             </Label>
           </div>
@@ -64,7 +64,7 @@ onMounted(() => {
             {{ loginError }}
           </p>
           <div class="card-actions mt-2">
-            <Button type="submit" variant="primary" class="w-full">
+            <Button class="w-full" type="submit" variant="primary">
               Inloggen
             </Button>
           </div>

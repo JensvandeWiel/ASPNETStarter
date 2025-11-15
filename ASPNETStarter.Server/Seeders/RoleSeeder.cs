@@ -1,7 +1,6 @@
 ﻿using ASPNETStarter.Server.Application;
 using ASPNETStarter.Server.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace ASPNETStarter.Server.Seeders;
 

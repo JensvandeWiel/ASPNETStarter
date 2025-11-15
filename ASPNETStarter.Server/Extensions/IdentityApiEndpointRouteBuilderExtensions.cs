@@ -490,11 +490,13 @@ public static class IdentityApiEndpointRouteBuilderExtensions
         return TypedResults.ValidationProblem(errorDictionary);
     }
 
-    private static async Task<ExtendedInfoResponse> CreateInfoResponseAsync<TUser>(TUser user, UserManager<TUser> userManager)
+    private static async Task<ExtendedInfoResponse> CreateInfoResponseAsync<TUser>(TUser user,
+        UserManager<TUser> userManager)
         where TUser : class
     {
-        ApplicationUser appUser = user as ApplicationUser ?? throw new NotSupportedException("User must be of type ApplicationUser.");
-        
+        var appUser = user as ApplicationUser ??
+                      throw new NotSupportedException("User must be of type ApplicationUser.");
+
         return new ExtendedInfoResponse
         {
             Id = await userManager.GetUserIdAsync(user),

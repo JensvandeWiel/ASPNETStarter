@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { useAuthStore } from '@/stores/auth-store';
-import { router } from '@/main';
+import {useAuthStore} from '@/stores/auth-store';
+import {router} from '@/main';
 import {NotificationType, useNotifyStore} from "@/stores/notify-store.ts";
 
 const api = axios.create();
@@ -19,29 +19,29 @@ api.interceptors.request.use((config) => {
 
 // Response interceptor: refresh token if expired
 api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const authStore = useAuthStore();
-    const notifyStore = useNotifyStore();
-    const originalRequest = error.config;
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        await authStore.refresh();
-        originalRequest.headers['Authorization'] = `Bearer ${authStore.token}`;
-        return api(originalRequest);
-      } catch (refreshError) {
-        authStore.clearTokens();
-        router.push('/login');
-        notifyStore.notify("Sessie is verlopen, log opnieuw in", NotificationType.Error);
-        return Promise.reject(new Error('Session expired. Please log in again.'));
+    (response) => response,
+    async (error) => {
+      const authStore = useAuthStore();
+      const notifyStore = useNotifyStore();
+      const originalRequest = error.config;
+      if (error.response && error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        try {
+          await authStore.refresh();
+          originalRequest.headers['Authorization'] = `Bearer ${authStore.token}`;
+          return api(originalRequest);
+        } catch (refreshError) {
+          authStore.clearTokens();
+          router.push('/login');
+          notifyStore.notify("Sessie is verlopen, log opnieuw in", NotificationType.Error);
+          return Promise.reject(new Error('Session expired. Please log in again.'));
+        }
       }
+      if (error.response && error.response.status === 401) {
+        authStore.clearTokens();
+      }
+      return Promise.reject(error);
     }
-    if (error.response && error.response.status === 401) {
-      authStore.clearTokens();
-    }
-    return Promise.reject(error);
-  }
 );
 
 export default api;

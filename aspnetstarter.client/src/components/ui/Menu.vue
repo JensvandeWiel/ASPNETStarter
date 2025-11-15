@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import MenuLink from "@/components/ui/MenuLink.vue";
 import MenuItem from "@/components/ui/MenuItem.vue";
@@ -13,10 +13,10 @@ const router = useRouter();
 <template>
   <aside class="w-1/6 m-4 bg-base-100 rounded-box flex flex-col">
     <ul class="menu menu-vertical gap-1 w-full h-full">
-      <MenuLink to="/" label="ASPNETStarter" class="text-base-content text-xl" isTitle />
+      <MenuLink class="text-base-content text-xl" isTitle label="ASPNETStarter" to="/"/>
       <MenuItem end>
         <button @click="authStore.logout(router)">
-          <LogOut class="w-5 h-5" />
+          <LogOut class="w-5 h-5"/>
           Log Uit
         </button>
       </MenuItem>

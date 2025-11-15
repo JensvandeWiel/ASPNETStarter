@@ -3,6 +3,7 @@ import {getActivePinia, type Pinia, type Store} from "pinia";
 interface ExtendedPinia extends Pinia {
   _s: Map<string, Store>;
 }
+
 export const $ResetPinia = (): Record<string | "all", () => void> => {
   const pinia = getActivePinia() as ExtendedPinia;
 

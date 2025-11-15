@@ -1,4 +1,4 @@
-import { defineStore } from "pinia"
+import {defineStore} from "pinia"
 import {CircleAlertIcon, CircleCheckIcon, CircleXIcon, InfoIcon} from "lucide-vue-next";
 import type {FunctionalComponent} from "vue";
 
@@ -6,7 +6,7 @@ import type {FunctionalComponent} from "vue";
 This store manages User and Account state including the ActiveAccount
 It is used in the Account administration page and the header due to it's account switching features.
 */
-export interface Notification{
+export interface Notification {
   id: number;
   message: string;
   type: NotificationType;
@@ -43,15 +43,21 @@ export const useNotifyStore = defineStore('notify', {
     }
   },
   actions: {
-    notify(messageOrError: unknown, type:NotificationType, soft?: boolean){
+    notify(messageOrError: unknown, type: NotificationType, soft?: boolean) {
       let message: string = "";
       if (messageOrError instanceof Error) message = messageOrError.message;
       if (typeof messageOrError === "string") message = messageOrError;
-      const notification: Notification = {message, type, notifyTime: Date.now(), id: this.nextId++, soft: soft ?? false};
+      const notification: Notification = {
+        message,
+        type,
+        notifyTime: Date.now(),
+        id: this.nextId++,
+        soft: soft ?? false
+      };
       this.notifications.push(notification);
       setTimeout(this.removeNotification.bind(this), 5000, notification);
     },
-    removeNotification(notification: Notification){
+    removeNotification(notification: Notification) {
       this.notifications = this.notifications.filter(n => n.id != notification.id);
     },
   }

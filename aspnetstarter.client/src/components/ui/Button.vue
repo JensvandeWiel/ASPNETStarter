@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { cva } from 'class-variance-authority'
-import { cn } from '@/lib/utils'
+import {computed} from 'vue'
+import {cva} from 'class-variance-authority'
+import {cn} from '@/lib/utils'
 
 const buttonVariants = cva('btn', {
   variants: {
@@ -53,28 +53,28 @@ interface ButtonProps {
 const props = defineProps<ButtonProps>()
 
 const classes = computed(() => cn(
-  buttonVariants({
-    variant: props.variant,
-    style: props.style,
-    size: props.size,
-  }),
-  props.block && 'btn-block',
-  props.wide && 'btn-wide',
-  props.square && 'btn-square',
-  props.circle && 'btn-circle',
-  props.active && 'btn-active',
-  props.disabled && 'btn-disabled',
-  props.class
+    buttonVariants({
+      variant: props.variant,
+      style: props.style,
+      size: props.size,
+    }),
+    props.block && 'btn-block',
+    props.wide && 'btn-wide',
+    props.square && 'btn-square',
+    props.circle && 'btn-circle',
+    props.active && 'btn-active',
+    props.disabled && 'btn-disabled',
+    props.class
 ))
 </script>
 
 <template>
   <button
-    :type="props.type ?? 'button'"
-    :disabled="props.disabled"
-    :class="classes"
-    v-bind="$attrs"
+      :class="classes"
+      :disabled="props.disabled"
+      :type="props.type ?? 'button'"
+      v-bind="$attrs"
   >
-    <slot />
+    <slot/>
   </button>
 </template>

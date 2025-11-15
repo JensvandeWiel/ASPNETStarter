@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { cva } from 'class-variance-authority'
-import { cn } from '@/lib/utils'
+import {computed} from 'vue'
+import {cva} from 'class-variance-authority'
+import {cn} from '@/lib/utils'
 
 const inputVariants = cva('input', {
   variants: {
@@ -62,13 +62,13 @@ function onInput(e: Event) {
 
 <template>
   <input
-    :type="props.type ?? 'text'"
-    :value="props.modelValue"
-    :disabled="props.disabled"
-    :placeholder="props.placeholder"
-    :class="classes"
-    @input="onInput"
-    v-bind="$attrs"
+      :class="classes"
+      :disabled="props.disabled"
+      :placeholder="props.placeholder"
+      :type="props.type ?? 'text'"
+      :value="props.modelValue"
+      v-bind="$attrs"
+      @input="onInput"
   />
 </template>
 

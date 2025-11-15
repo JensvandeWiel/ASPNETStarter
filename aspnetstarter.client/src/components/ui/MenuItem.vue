@@ -1,6 +1,7 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {defineProps} from 'vue';
 import {cn} from "@/lib/utils.ts";
+
 const props = defineProps<{ class?: string, end?: boolean }>();
 </script>
 

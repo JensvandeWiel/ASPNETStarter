@@ -1,9 +1,10 @@
 import {defineStore} from "pinia";
 import axios, {AxiosError, type AxiosResponse} from "axios";
 import type {
+  AccessTokenResponse,
   LoginOptions,
   LoginRequestBody,
-  AccessTokenResponse, RefreshRequestBody
+  RefreshRequestBody
 } from "@/types/auth.ts";
 import {$ResetPinia} from "@/lib/pinia.ts";
 

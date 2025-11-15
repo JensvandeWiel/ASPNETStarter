@@ -1,4 +1,5 @@
-﻿using ASPNETStarter.Server.Models;
+﻿using System.Reflection;
+using ASPNETStarter.Server.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +7,11 @@ namespace ASPNETStarter.Server.Application;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
+        base(options)
+    {
+    }
+
     public DbSet<SeederHistory> SeederHistories => Set<SeederHistory>();
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -20,15 +26,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         foreach (var type in configurableModelTypes)
         {
             Console.WriteLine(type.Namespace);
-            var method = type.GetMethod("OnModelCreating", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            var method = type.GetMethod("OnModelCreating", BindingFlags.Public | BindingFlags.Static);
             method?.Invoke(null, new object[] { builder });
         }
-        
-        base.OnModelCreating(builder);
-    }
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
-        base(options)
-    {
+        base.OnModelCreating(builder);
     }
 }
